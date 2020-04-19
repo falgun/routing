@@ -1,0 +1,25 @@
+{
+    "name": "falgun/routing",
+    "type": "library",
+    "authors": [
+        {
+            "name": "S.M. Ataur Rahman"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Falgun\\Routing\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Falgun\\Routing\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5",
+        "phpstan/phpstan": "^0.12.18",
+        "vimeo/psalm": "^3.11",
+        "phpunit/phpunit": "^9.1"
+    }
+}

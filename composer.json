@@ -1,9 +1,13 @@
 {
-    "name": "falgun/routing",
+    "name": "falgunphp/routing",
     "type": "library",
+    "homepage": "https://github.com/falgun/routing",
+    "license": "MIT",
     "authors": [
         {
-            "name": "S.M. Ataur Rahman"
+            "name": "S.M. Ataur Rahman",
+            "email": "dev.ataur.rahman@gmail.com",
+            "homepage": "https://ataur.net/"
         }
     ],
     "autoload": {
@@ -16,10 +20,19 @@
             "Falgun\\Routing\\Tests\\": "tests/"
         }
     },
+    "require": {
+        "php": "^7.4"
+    },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5",
         "phpstan/phpstan": "^0.12.18",
         "vimeo/psalm": "^3.11",
         "phpunit/phpunit": "^9.1"
+    },
+    "scripts": {
+        "phpunit": "phpunit --verbose --colors=always"
+    },
+    "config": {
+        "sort-packages": true
     }
 }

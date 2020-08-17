@@ -20,6 +20,11 @@ class Route implements RouteInterface
     {
         $this->httpMethods = $httpMethods;
         $this->routeUrl = $routeUrl;
+        $this->controller = '';
+        $this->method = '';
+        $this->middlewares = [];
+        $this->parameters = [];
+        $this->closure = null;
     }
 
     public function action(string $controller, string $method): self

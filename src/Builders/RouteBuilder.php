@@ -10,8 +10,15 @@ class RouteBuilder
 {
 
     protected string $baseUrl;
-    protected string $prefix = '';
-    protected array $middlewares = [];
+    protected string $prefix;
+    protected array $middlewares;
+
+    public function __construct(string $baseUrl)
+    {
+        $this->setBaseUrl($baseUrl);
+        $this->prefix = '';
+        $this->middlewares = [];
+    }
 
     public function buildAsRegex(array $httpMethods, string $routeUrl): RouteInterface
     {

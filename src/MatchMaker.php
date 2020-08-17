@@ -39,7 +39,7 @@ class MatchMaker
 
     protected function matchWithRegexRoute(RouteInterface $route, RequestContextInterface $requestContext): bool
     {
-        if ($this->isMethodSupported($route, $requestContext->getMethod() === false)) {
+        if ($this->isMethodSupported($route, $requestContext->getMethod()) === false) {
             return false;
         }
 

@@ -11,7 +11,7 @@ interface RouterInterface
 
     public function group(array $options, Closure $callback): void;
 
-    public function setBaseUrl(string $url = ''): void;
+    public function setBaseUrl(string $baseUrl): void;
 
     public function dispatch(RequestContextInterface $requestContext): RouteInterface;
 

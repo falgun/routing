@@ -16,12 +16,11 @@ class Router implements RouterInterface
     protected RegexRouteCollection $regexRoutes;
     protected StaticRouteCollection $staticRoutes;
 
-    public function __construct()
+    public function __construct(string $baseUrl)
     {
         $this->regexRoutes = new RegexRouteCollection();
         $this->staticRoutes = new StaticRouteCollection();
-        $this->routeBuilder = new RouteBuilder();
-        $this->setBaseUrl();
+        $this->routeBuilder = new RouteBuilder($baseUrl);
     }
 
     protected function isDynamicRouteUrl(string $routeUrl): bool
@@ -73,13 +72,9 @@ class Router implements RouterInterface
         throw new RouteNotFoundException('"' . $requestContext->getUrl() . '" Route not found !');
     }
 
-    public function setBaseUrl(string $url = ''): void
+    public function setBaseUrl(string $baseUrl): void
     {
-        if (empty($url)) {
-            $url = \defined('BASE_URL') ? \BASE_URL : '';
-        }
-
-        $this->routeBuilder->setBaseUrl($url);
+        $this->routeBuilder->setBaseUrl($baseUrl);
     }
 
     protected function runCallback(Closure $callback, ...$params): void

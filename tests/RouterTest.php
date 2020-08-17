@@ -16,8 +16,7 @@ class RouterTest extends TestCase
 
     public function testStaticGetRoute()
     {
-        $router = new \Falgun\Routing\Router();
-        $router->setBaseUrl(self::BASE_URL);
+        $router = new \Falgun\Routing\Router(self::BASE_URL);
         $router->get('/test')->action('ControllerClassGET', 'MethodName')->middleware(['MiddlewareClass']);
         $router->post('/test')->action('ControllerClassPOST', 'MethodName')->middleware(['MiddlewareClass']);
         $router->delete('/test')->action('ControllerClassDELETE', 'MethodName')->middleware(['MiddlewareClass']);
@@ -41,12 +40,25 @@ class RouterTest extends TestCase
         $this->assertTrue($matched->getController() === 'ControllerClassDELETE');
     }
 
+    public function testCallbackRoute()
+    {
+        $router = new \Falgun\Routing\Router(self::BASE_URL);
+        $router->get('/test')->callback(function() {
+            
+        });
+
+        // GET
+        $requestContext = new RequestContext(self::BASE_URL . 'test', 'GET');
+        $matched = $router->dispatch($requestContext);
+
+        $this->assertTrue($matched->getClosure() instanceof \Closure);
+    }
+
     public function testGroupedRoute()
     {
 
         //List
-        $router = new \Falgun\Routing\Router();
-        $router->setBaseUrl(self::BASE_URL);
+        $router = new \Falgun\Routing\Router(self::BASE_URL);
         $router->add(['GET'], '/list')->action('Controller', 'action');
 
         $router->group(['prefix' => '/admin'], function(Router $router) {
@@ -63,8 +75,7 @@ class RouterTest extends TestCase
     {
 
         //List
-        $router = new \Falgun\Routing\Router();
-        $router->setBaseUrl(self::BASE_URL);
+        $router = new \Falgun\Routing\Router(self::BASE_URL);
         $router->any('/list')->action('Controller', 'action');
         $router->any('/add')->action('Controller', 'action');
         $router->any('/edit')->action('Controller', 'action');

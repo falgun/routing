@@ -43,7 +43,7 @@ class MatchMaker
             return false;
         }
 
-        if (\preg_match($route->getRouteUrl(), $requestContext->getUrl(), $parameters)) {
+        if (\preg_match($route->getRouteUrl(), $this->getUrl($requestContext), $parameters)) {
             $route->setParameters($this->prepareRouteParameters($parameters));
 
             return true;
@@ -65,11 +65,11 @@ class MatchMaker
      */
     protected function matchWithStaticRoutes(RequestContextInterface $requestContext)
     {
-        if ($this->staticRoutes->has($requestContext->getUrl()) === false) {
+        if ($this->staticRoutes->has($this->getUrl($requestContext)) === false) {
             return false;
         }
 
-        $matchedRoutes = $this->staticRoutes->get($requestContext->getUrl());
+        $matchedRoutes = $this->staticRoutes->get($this->getUrl($requestContext));
 
         foreach ($matchedRoutes as $route) {
             if ($this->isMethodSupported($route, $requestContext->getMethod()) === true) {
@@ -83,5 +83,12 @@ class MatchMaker
     protected function isMethodSupported(RouteInterface $route, string $method): bool
     {
         return (empty($route->getHttpMethods()) || \in_array($method, $route->getHttpMethods(), true));
+    }
+
+    protected function getUrl(RequestContextInterface $requestContext): string
+    {
+        $url = \ltrim($requestContext->getUrl());
+
+        return \rtrim($url, " \t\n\r\0\x0B" . "/");
     }
 }

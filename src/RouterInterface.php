@@ -6,10 +6,12 @@ use Closure;
 
 interface RouterInterface
 {
-
-    public function build(array $httpMethods, string $routeUrl): RouteInterface;
-
-    public function group(array $options, Closure $callback): void;
+    /**
+     * @param array $options
+     * @param Closure(RouterInterface): void $closure
+     * @return void
+     */
+    public function group(array $options, Closure $closure): void;
 
     public function setBaseUrl(string $baseUrl): void;
 

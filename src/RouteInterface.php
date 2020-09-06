@@ -9,12 +9,17 @@ interface RouteInterface
 
     public function action(string $controller, string $method): self;
 
-    public function callback(Closure $closure): self;
+    public function closure(Closure $closure): self;
 
     public function middleware(array $middlewares, bool $overWrite = false): self;
 
     public function setParameters(array $parameters): void;
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     public function setParameter(string $key, $value): void;
 
     public function getRouteUrl(): string;

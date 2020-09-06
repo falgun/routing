@@ -9,8 +9,8 @@ use Falgun\Routing\Collections\StaticRouteCollection;
 class MatchMaker
 {
 
-    protected $staticRoutes;
-    protected $regexRoutes;
+    protected StaticRouteCollection $staticRoutes;
+    protected RegexRouteCollection $regexRoutes;
 
     public function __construct(StaticRouteCollection $staticRoutes, RegexRouteCollection $regexRoutes)
     {
@@ -18,11 +18,11 @@ class MatchMaker
         $this->regexRoutes = $regexRoutes;
     }
 
-    public function matchWith(RequestContextInterface $requestContext)
+    public function matchWith(RequestContextInterface $requestContext): RouteInterface
     {
         $staticRoute = $this->matchWithStaticRoutes($requestContext);
 
-        if ($staticRoute !== false) {
+        if ($staticRoute instanceof RouteInterface) {
             // matched with a static route
             return $staticRoute;
         }
@@ -34,7 +34,7 @@ class MatchMaker
             }
         }
 
-        return false;
+        throw new RouteNotFoundException('"' . $requestContext->getFullUrl() . '" Route not found !');
     }
 
     protected function matchWithRegexRoute(RouteInterface $route, RequestContextInterface $requestContext): bool
@@ -54,9 +54,12 @@ class MatchMaker
 
     protected function prepareRouteParameters(array $matches): array
     {
-        return \array_filter($matches, function ($key) {
+        /** @psalm-suppress MissingClosureParamType */
+        $checkIfString = function ($key): bool {
             return \is_string($key);
-        }, \ARRAY_FILTER_USE_KEY);
+        };
+
+        return \array_filter($matches, $checkIfString, \ARRAY_FILTER_USE_KEY);
     }
 
     /**
@@ -87,7 +90,7 @@ class MatchMaker
 
     protected function getUrl(RequestContextInterface $requestContext): string
     {
-        $url = \ltrim($requestContext->getUrl());
+        $url = \ltrim($requestContext->getFullUrl());
 
         return \rtrim($url, " \t\n\r\0\x0B" . "/");
     }

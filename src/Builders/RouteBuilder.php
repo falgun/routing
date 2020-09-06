@@ -22,10 +22,10 @@ class RouteBuilder
 
     public function buildAsRegex(array $httpMethods, string $routeUrl): RouteInterface
     {
-        $routeUrl = $this->prepareRouteUrl($routeUrl);
-        $routeUrl = $this->regularExpression($routeUrl);
+        $cleanRouteUrl = $this->prepareRouteUrl($routeUrl);
+        $regexRouteUrl = $this->regularExpression($cleanRouteUrl);
 
-        $route = new Route($httpMethods, $routeUrl);
+        $route = new Route($httpMethods, $regexRouteUrl);
 
         if (!empty($this->middlewares)) {
             $route->middleware($this->middlewares);
@@ -36,9 +36,9 @@ class RouteBuilder
 
     public function buildAsStatic(array $httpMethods, string $routeUrl): RouteInterface
     {
-        $routeUrl = $this->prepareRouteUrl($routeUrl);
+        $staticRouteUrl = $this->prepareRouteUrl($routeUrl);
 
-        $route = new Route($httpMethods, $routeUrl);
+        $route = new Route($httpMethods, $staticRouteUrl);
 
         if (!empty($this->middlewares)) {
             $route->middleware($this->middlewares);
@@ -66,16 +66,16 @@ class RouteBuilder
     protected function easyRegEx(string $routeUrl): string
     {
         $easyRegExArray = array(':int}', ':word}', ':string}');
-        $regExArray = array(':[\d^/]+}', ':[\w^/]}', ':[\S^/]+}');
+        $regExArray = array(':[\d^/]+}', ':[\w^/]+}', ':[\S^/]+}');
 
         return \str_replace($easyRegExArray, $regExArray, $routeUrl);
     }
 
     protected function cleanUrl(string $url): string
     {
-        $url = \ltrim($url);
+        $cleanUrl = \ltrim($url);
 
-        return \rtrim($url, " \t\n\r\0\x0B" . "/");
+        return \rtrim($cleanUrl, " \t\n\r\0\x0B" . "/");
     }
 
     public function setBaseUrl(string $baseUrl): void
@@ -119,7 +119,7 @@ class RouteBuilder
             if (\property_exists($this, $property)) {
                 $this->{$property} = $value;
             } else {
-                throw new \Exception('propery ' . $property . ' does not exist in RouteBuilder');
+                throw new \InvalidArgumentException('propery ' . $property . ' does not exist in RouteBuilder');
             }
         }
     }

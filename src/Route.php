@@ -35,7 +35,7 @@ class Route implements RouteInterface
         return $this;
     }
 
-    public function callback(Closure $closure): self
+    public function closure(Closure $closure): self
     {
         $this->closure = $closure;
 
@@ -59,6 +59,11 @@ class Route implements RouteInterface
         $this->parameters = $parameters;
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     public function setParameter(string $key, $value): void
     {
         $this->parameters[$key] = $value;

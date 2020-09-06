@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Falgun\Routing;
 
 use Closure;
-use Inflect\Inflect;
 use Falgun\Routing\Builders\RouteBuilder;
 use Falgun\Routing\Collections\RegexRouteCollection;
 use Falgun\Routing\Collections\StaticRouteCollection;
@@ -16,7 +15,7 @@ class Router implements RouterInterface
     protected RegexRouteCollection $regexRoutes;
     protected StaticRouteCollection $staticRoutes;
 
-    public function __construct(string $baseUrl)
+    final public function __construct(string $baseUrl)
     {
         $this->regexRoutes = new RegexRouteCollection();
         $this->staticRoutes = new StaticRouteCollection();
@@ -25,10 +24,10 @@ class Router implements RouterInterface
 
     protected function isDynamicRouteUrl(string $routeUrl): bool
     {
-        return strpos($routeUrl, '{') !== false;
+        return \strpos($routeUrl, '{') !== false;
     }
 
-    public function build(array $httpMethods, string $routeUrl): RouteInterface
+    protected function build(array $httpMethods, string $routeUrl): RouteInterface
     {
         if ($this->isDynamicRouteUrl($routeUrl) === true) {
             $route = $this->routeBuilder->buildAsRegex($httpMethods, $routeUrl);
@@ -43,7 +42,12 @@ class Router implements RouterInterface
         return $route;
     }
 
-    public function group(array $options, Closure $callback): void
+    /**
+     * @param array $options
+     * @param Closure(RouterInterface): void $closure
+     * @return void
+     */
+    public function group(array $options, Closure $closure): void
     {
         $backup = $this->routeBuilder;
 
@@ -53,7 +57,8 @@ class Router implements RouterInterface
         // set new builder as current one
         $this->routeBuilder = $newRouteBuilder;
 
-        $this->runCallback($callback, $this);
+        // execute the closure
+        $closure($this);
 
         // Restore Old builder from backup
         $this->routeBuilder = $backup;
@@ -65,21 +70,12 @@ class Router implements RouterInterface
 
         $matchedRoute = $matchmaker->matchWith($requestContext);
 
-        if ($matchedRoute instanceof RouteInterface) {
-            return $matchedRoute;
-        }
-
-        throw new RouteNotFoundException('"' . $requestContext->getUrl() . '" Route not found !');
+        return $matchedRoute;
     }
 
     public function setBaseUrl(string $baseUrl): void
     {
         $this->routeBuilder->setBaseUrl($baseUrl);
-    }
-
-    protected function runCallback(Closure $callback, ...$params): void
-    {
-        $callback(...$params);
     }
 
     public function add(array $httpMethods, string $route): RouteInterface

@@ -8,6 +8,10 @@ use Falgun\Routing\RouteInterface;
 class StaticRouteCollection implements RouteCollectionInterface
 {
 
+    /**
+     *
+     * @var RouteInterface[][]
+     */
     protected array $routes;
 
     public function __construct(array $routes = [])
@@ -27,25 +31,22 @@ class StaticRouteCollection implements RouteCollectionInterface
 
     public function set(RouteInterface $route): void
     {
-        $this->routes[$route->getRouteUrl()][] = $route;
+        $url = $route->getRouteUrl();
+
+        $this->routes[$url][] = $route;
     }
 
     public function get(string $key): array
     {
-        if ($this->has($key) === false) {
-            throw new \Exception('No route with key: "' . $key . '" found!');
+        if ($this->has($key)) {
+            return $this->routes[$key];
         }
 
-        return $this->routes[$key];
+        throw new \InvalidArgumentException('No route with key: "' . $key . '" found!');
     }
 
     public function has(string $key): bool
     {
         return isset($this->routes[$key]);
-    }
-
-    public function remove(string $key): void
-    {
-        unset($this->routes[$key]);
     }
 }

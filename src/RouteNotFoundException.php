@@ -2,9 +2,9 @@
 
 namespace Falgun\Routing;
 
-use Exception;
+use RuntimeException;
 
-class RouteNotFoundException extends Exception
+class RouteNotFoundException extends RuntimeException
 {
     
 }

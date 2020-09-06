@@ -7,6 +7,11 @@ use Falgun\Routing\RouteInterface;
 
 class RegexRouteCollection implements RouteCollectionInterface
 {
+
+    /**
+     *
+     * @var RouteInterface[]
+     */
     protected array $routes;
 
     public function __construct(array $routes = [])

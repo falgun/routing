@@ -6,22 +6,41 @@ namespace Falgun\Routing;
 class RequestContext implements RequestContextInterface
 {
 
-    protected string $url;
     protected string $method;
+    protected string $scheme;
+    protected string $host;
+    protected string $uri;
 
-    public function __construct(string $url, string $method)
+    public function __construct(string $method, string $scheme, string $host, string $uri)
     {
-        $this->url = $url;
         $this->method = $method;
-    }
-
-    public function getUrl(): string
-    {
-        return $this->url;
+        $this->scheme = $scheme;
+        $this->host = $host;
+        $this->uri = $uri;
     }
 
     public function getMethod(): string
     {
         return $this->method;
+    }
+
+    public function getScheme(): string
+    {
+        return $this->scheme;
+    }
+
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+    public function getFullUrl(): string
+    {
+        return $this->scheme . '://' . $this->host . $this->uri;
     }
 }

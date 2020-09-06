@@ -25,14 +25,19 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5",
+        "slevomat/coding-standard": "~6.0",
         "phpstan/phpstan": "^0.12.18",
         "vimeo/psalm": "^3.11",
         "phpunit/phpunit": "^9.1"
     },
     "scripts": {
-        "phpunit": "phpunit --verbose --colors=always"
+        "phpunit": "phpunit --verbose --colors=always",
+        "phpcs": "phpcs src/",
+        "psalm": "psalm --show-info=true",
+        "phpstan": "phpstan analyze src/ --level max"
     },
     "config": {
+        "optimize-autoloader": true,
         "sort-packages": true
     }
 }

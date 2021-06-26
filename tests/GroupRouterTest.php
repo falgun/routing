@@ -29,19 +29,19 @@ class GroupRouterTest extends TestCase
             $router->get('/list')->action('Controller', 'yetanothersite');
         });
 
-        $requestContext = new RequestContext('GET', 'http', 'website.com', '/list');
+        $requestContext = RequestContext::fromUriParts('GET', 'http', 'website.com', 80, '/list');
 
         $matched = $router->dispatch($requestContext);
 
         $this->assertEquals('website', $matched->getMethod());
 
-        $requestContext = new RequestContext('GET', 'http', 'anothersite.com', '/list');
+        $requestContext = RequestContext::fromUriParts('GET', 'http', 'anothersite.com', 80, '/list');
 
         $matched = $router->dispatch($requestContext);
 
         $this->assertEquals('anothersite', $matched->getMethod());
 
-        $requestContext = new RequestContext('GET', 'http', 'yetanothersite.com', '/list');
+        $requestContext = RequestContext::fromUriParts('GET', 'http', 'yetanothersite.com', 80, '/list');
 
         $matched = $router->dispatch($requestContext);
 

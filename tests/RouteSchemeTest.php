@@ -18,12 +18,12 @@ class RouteSchemeTest extends TestCase
         $router->any('/test');
 
         // success
-        $context = new RequestContext('GET', 'http', 'website.com', '/test');
+        $context = RequestContext::fromUriParts('GET', 'http', 'website.com', 80, '/test');
         $route = $router->dispatch($context);
         $this->assertTrue($route instanceof Route);
 
         // fail
-        $context = new RequestContext('GET', 'https', 'website.com', '/test');
+        $context = RequestContext::fromUriParts('GET', 'https', 'website.com', 80, '/test');
 
         $this->expectException(\Falgun\Routing\RouteNotFoundException::class);
         $router->dispatch($context);

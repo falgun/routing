@@ -15,6 +15,7 @@ class RouterTest extends TestCase
     const BASE_URL = 'http://localhost/framework/public/';
     const SCHEME = 'http';
     const HOST = 'localhost';
+    const PORT = 80;
     const URI = '/framework/public';
 
     public function testStaticGetRoute()
@@ -25,19 +26,19 @@ class RouterTest extends TestCase
         $router->delete('/test')->action('ControllerClassDELETE', 'MethodName')->middleware(['MiddlewareClass']);
 
         // GET
-        $requestContext = new RequestContext('GET', self::SCHEME, self::HOST, self::URI . '/test');
+        $requestContext = RequestContext::fromUriParts('GET', self::SCHEME, self::HOST, self::PORT, self::URI . '/test');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched->getController() === 'ControllerClassGET');
 
         //POST
-        $requestContext = new RequestContext('POST', self::SCHEME, self::HOST, self::URI . '/test');
+        $requestContext = RequestContext::fromUriParts('POST', self::SCHEME, self::HOST, self::PORT, self::URI . '/test');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched->getController() === 'ControllerClassPOST');
 
         //DELETE
-        $requestContext = new RequestContext('DELETE', self::SCHEME, self::HOST, self::URI . '/test');
+        $requestContext = RequestContext::fromUriParts('DELETE', self::SCHEME, self::HOST, self::PORT, self::URI . '/test');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched->getController() === 'ControllerClassDELETE');
@@ -48,7 +49,7 @@ class RouterTest extends TestCase
         $router = new \Falgun\Routing\Router(self::BASE_URL);
         $router->put('test');
 
-        $requestContext = new RequestContext('PUT', self::SCHEME, self::HOST, self::URI . '/test');
+        $requestContext = RequestContext::fromUriParts('PUT', self::SCHEME, self::HOST, self::PORT, self::URI . '/test');
 
         $this->expectException(RouteNotFoundException::class);
         $matched = $router->dispatch($requestContext);
@@ -62,7 +63,7 @@ class RouterTest extends TestCase
         });
 
         // GET
-        $requestContext = new RequestContext('GET', self::SCHEME, self::HOST, self::URI . '/test');
+        $requestContext = RequestContext::fromUriParts('GET', self::SCHEME, self::HOST, self::PORT, self::URI . '/test');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched->getClosure() instanceof \Closure);
@@ -79,7 +80,7 @@ class RouterTest extends TestCase
             $router->get('/list')->action('AdminController', 'AdminList');
         });
 
-        $requestContext = new RequestContext('GET', self::SCHEME, self::HOST, self::URI . '/admin/list');
+        $requestContext = RequestContext::fromUriParts('GET', self::SCHEME, self::HOST, self::PORT, self::URI . '/admin/list');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched->getController() === 'AdminController');
@@ -93,7 +94,7 @@ class RouterTest extends TestCase
         $router->any('/add')->action('Controller', 'action');
         $router->any('/edit')->action('Controller', 'action');
 
-        $requestContext = new RequestContext('GET', self::SCHEME, self::HOST, self::URI . '/admin/list');
+        $requestContext = RequestContext::fromUriParts('GET', self::SCHEME, self::HOST, self::PORT, self::URI . '/admin/list');
 
         $this->expectException(RouteNotFoundException::class);
         $matched = $router->dispatch($requestContext);

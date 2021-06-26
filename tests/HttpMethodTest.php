@@ -37,7 +37,7 @@ class HttpMethodTest extends TestCase
 
     private function execRouter(string $method, $uri): Route
     {
-        $requestContext = new RequestContext($method, 'http', 'website.com', $uri);
+        $requestContext = RequestContext::fromUriParts($method, 'http', 'website.com', 80, $uri);
 
         return $this->router->dispatch($requestContext);
     }

@@ -13,6 +13,7 @@ class RegexRouteTest extends TestCase
 
     const SCHEME = 'http';
     const HOST = 'localhost';
+    const PORT = 80;
     const URI = '/framework/public';
 
     public function testRegexRoutes()
@@ -28,7 +29,7 @@ class RegexRouteTest extends TestCase
 
 
         // Route 1
-        $requestContext = new RequestContext('GET', self::SCHEME, self::HOST, self::URI . '/test/111/abc/999');
+        $requestContext = RequestContext::fromUriParts('GET', self::SCHEME, self::HOST, self::PORT, self::URI . '/test/111/abc/999');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched instanceof RouteInterface);
@@ -37,7 +38,7 @@ class RegexRouteTest extends TestCase
         $this->assertEquals(['MiddlewareClass'], $matched->getMiddlewares());
 
         // Route 2
-        $requestContext = new RequestContext('POST', self::SCHEME, self::HOST, self::URI . '/test/111/abc/email.com');
+        $requestContext = RequestContext::fromUriParts('POST', self::SCHEME, self::HOST, self::PORT, self::URI . '/test/111/abc/email.com');
         $matched = $router->dispatch($requestContext);
 
         $this->assertTrue($matched instanceof RouteInterface);
@@ -45,7 +46,7 @@ class RegexRouteTest extends TestCase
         $this->assertEquals(['id' => 111, 'name' => 'abc', 'email' => 'email.com'], $matched->getParameters());
         $this->assertEquals(['MiddlewareClass', 'AnotherMiddleware'], $matched->getMiddlewares());
 
-        $requestContext = new RequestContext('GET', self::SCHEME, self::HOST, self::URI . '/test/111/email');
+        $requestContext = RequestContext::fromUriParts('GET', self::SCHEME, self::HOST, self::PORT, self::URI . '/test/111/email');
         $this->expectException(\Falgun\Routing\RouteNotFoundException::class);
         $matched = $router->dispatch($requestContext);
     }
